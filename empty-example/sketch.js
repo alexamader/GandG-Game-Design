@@ -1,19 +1,29 @@
 function setup() {
-  createCanvas(700, 600);
+  createCanvas(400, 400);
+  for (let i = 0; i < 5; i++){
+    if ((i%2) == 0){
+      for (let x = 0; x<4;x++){
+        fill(23,143,87);
+       if (x%2 == 0){
+         fill(150,100,200);
+       }
+        ellipse(50,x*100+50,50,50)
+
+      }
+    }
+    else {
+     for (let x = 0; x<5;x++){
+       fill(220,5,134);
+       if (x%2 == 0){
+         fill(123,23,195);
+       }
+       ellipse(50,x*100,50,50)
+      }
+    }
+    translate(50,0);
+  }
 }
 
-function draw(){
-	background(220,100,3);
-  fill("black")
-  ellipse(100,100,40,50);
-  fill("blue")
-  rect(200,200,100,150)
-  rect(400,300,100,100);
-  fill("green");
-  rect(375,400,150,150);
-  rect(325,410,50,100);
-  rect(500,410,50,100);
-  fill("yellow");
-  ellipse(400,340,15,15);
-  ellipse(450,340,15,15);
+function draw() {
+
 }
