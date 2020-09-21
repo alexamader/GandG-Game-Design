@@ -16,13 +16,13 @@ function setup() {
 
 function draw(){
 	background(220);
-  
+
   me.drawMe();
   me.moveMe();
 
   enemy.drawMe();
   enemy.moveMe();
-  if (frameCount % 100 == 0) {
+  if (frameCount % 50 == 0) {
       let  b = new Ball(width, random(0,height), random(0.7,5), random(-3,3));
       balls.push(b);
       let e = new EnemeyBall(width, random(0,height), random(0.7,5), random(-3,3));
