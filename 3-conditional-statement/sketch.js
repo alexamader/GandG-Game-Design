@@ -1,9 +1,14 @@
-//create an empty array called balls
 let balls = [];
 let enemyBalls = [];
 let me;
 let enemy;
 let winner = "nobody";
+let mySound;
+
+function preload() {
+  soundFormats('wav', 'ogg');
+  mySound = loadSound('bounce.wav');
+}
 
 function setup() {
   createCanvas(500, 400);
@@ -143,6 +148,8 @@ class Ball {
 
             this.xspeed = -this.xspeed * random(.5,2);
             this.yspeed = -this.yspeed * random(.5,2);
+            mySound.setVolume(0.1);
+            mySound.play();
     		}
         if (this.x >= enemy.x-20 && this.x <= enemy.x+20 && this.y > enemy.y-20 && this.y < enemy.y+20){
           enemy.die();
@@ -172,6 +179,8 @@ class EnemeyBall {
 
             this.xspeed = -this.xspeed * random(.5,2);
             this.yspeed = -this.yspeed * random(.5,2);
+            mySound.setVolume(0.1);
+            mySound.play();
     		}
         if (this.x >= me.x-20 && this.x <= me.x+20 && this.y > me.y-20 && this.y < me.y+20){
           me.die();
