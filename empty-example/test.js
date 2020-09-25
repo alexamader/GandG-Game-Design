@@ -1,10 +1,10 @@
 let box;
 
 function setup() {
-  createCanvas(800,400);
+  createCanvas(1000,800);
 
   box = new Box(20,20,"square");
-  block = createSprite(50,275,100,100);
+  block = createSprite(50,550,100,100);
 
 }
 
