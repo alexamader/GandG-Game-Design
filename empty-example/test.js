@@ -27,9 +27,12 @@ class Box{
     drawSprites()
   }
   move(){
+    block.collide(this.name);
+    this.name.debug = mouseIsPressed;
+
     if ((this.name.collide(block)) == false){
       this.name.velocity.y += .2;
     }
-    this.name.collide(block);
+
   }
 }
