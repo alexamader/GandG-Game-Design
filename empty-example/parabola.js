@@ -1,16 +1,17 @@
 
 let GRAVITY = 1
 function setup() {
-  createCanvas(1200,800);
+  createCanvas(2000,800);
   background("yellow");
 
-  platform = createSprite(600,750);
+  platform = createSprite(1000,750);
   platform.addAnimation('normal', 'mountains.png');
   platform.debug = true;
 
 
 
-
+  tank = createSprite(700,100);
+  tank.addAnimation('normal', 'tank.png');
 
   soldier = createSprite(500,100);
   soldier.addAnimation('normal', 'soldier2.png');
@@ -31,13 +32,24 @@ function draw() {
     soldier.velocity.y = 0;
   }
 
-  if (keyIsDown(LEFT_ARROW)){
+  tank.velocity.x = 0;
+  if(platform.overlapPixel(tank.position.x, tank.position.y+25)==false){
+    tank.velocity.y += GRAVITY;
+  }
+  while(platform.overlapPixel(tank.position.x, tank.position.y+25)){
+    tank.position.y--;
+    tank.velocity.y = 0;
+  }
+
+  if (keyIsDown(65)){
     //sprite.velocity.x = -5;
     soldier.velocity.x = -5;
+    tank.velocity.x = -5;
   }
-  if (keyIsDown(RIGHT_ARROW)){
+  if (keyIsDown(68)){
     //sprite.velocity.x = 5;
     soldier.velocity.x = 5;
+    tank.velocity.x = 5;
   }
 
   drawSprites();
