@@ -14,7 +14,7 @@ function setup() {
 
 
   let tank = new Tank1("first")
-  let tank1 = new Tank("here")
+  let tank1 = new Tank2("here")
 }
 function draw() {
   background("yellow");
@@ -114,7 +114,7 @@ class Tank{
     this.x = 40;
     this.y = 100;
     this.name = createSprite(this.x,this.y);
-    this.name.addAnimation('normal', 'tank.png');
+    this.name.addAnimation('normal', 'tank2.png');
   }
   move(){
     this.name.velocity.x = 0
@@ -137,7 +137,32 @@ class Tank{
 
 class Tank1{
   constructor(name){
-    this.x = 10;
+    this.x = 176;
+    this.y = 100;
+    this.name = createSprite(this.x,this.y);
+    this.name.addAnimation('normal', 'tank2.png');
+  }
+  move(){
+    this.name.velocity.x = 0
+    if(platform.overlapPixel(this.name.position.x, this.name.position.y+25)==false){
+      this.name.velocity.y += GRAVITY;
+    }
+    while(platform.overlapPixel(this.name.position.x, this.name.position.y+25)){
+      this.name.position.y--;
+      this.name.velocity.y = 0;
+    }
+    if (keyIsDown(65)){
+      this.name.velocity.x = -5;
+    }
+    if (keyIsDown(68)){
+      this.name.velocity.x = 5;
+    }
+    drawSprites();
+  }
+}
+class Tank2{
+  constructor(name){
+    this.x = 50;
     this.y = 100;
     this.name = createSprite(this.x,this.y);
     this.name.addAnimation('normal', 'tank2.png');
