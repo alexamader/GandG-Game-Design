@@ -1,59 +1,94 @@
 
-let GRAVITY = 1
+let GRAVITY = 1;
+let tanklst = [];
+let soldierlst = [];
+
 function setup() {
   createCanvas(2000,800);
   background("yellow");
 
   platform = createSprite(1000,750);
   platform.addAnimation('normal', 'mountains.png');
-  platform.debug = true;
 
-
-
-  tank = createSprite(700,100);
-  tank.addAnimation('normal', 'tank.png');
-
-  soldier = createSprite(500,100);
-  soldier.addAnimation('normal', 'soldier2.png');
-
-
-  drawSprites();
+  soldier = new Soldier1("first");
+  tank = new Tank1("first")
 }
-
 function draw() {
   background("yellow");
 
-  soldier.velocity.x = 0
-  if(platform.overlapPixel(soldier.position.x, soldier.position.y+25)==false){
-    soldier.velocity.y += GRAVITY;
+  for (let x=0; x<tanklst.length; x++){
+    tanklst[x].move();
+    print("hey")
   }
-  while(platform.overlapPixel(soldier.position.x, soldier.position.y+25)){
-    soldier.position.y--;
-    soldier.velocity.y = 0;
-  }
-
-  tank.velocity.x = 0;
-  if(platform.overlapPixel(tank.position.x, tank.position.y+25)==false){
-    tank.velocity.y += GRAVITY;
-  }
-  while(platform.overlapPixel(tank.position.x, tank.position.y+25)){
-    tank.position.y--;
-    tank.velocity.y = 0;
+  for (let x=0; x<soldierlst.length; x++){
+    soldierlst[x].move();
+    print("hey")
   }
 
-  if (keyIsDown(65)){
-    //sprite.velocity.x = -5;
-    soldier.velocity.x = -5;
-    tank.velocity.x = -5;
+  soldier.move()
+  tank.move()
+}
+
+function keyPressed() {
+  if (keyCode == UP_ARROW){
+    let t = new Tank1("tank");
+    tanklst.push(t);
   }
-  if (keyIsDown(68)){
-    //sprite.velocity.x = 5;
-    soldier.velocity.x = 5;
-    tank.velocity.x = 5;
+  if (keyCode == DOWN_ARROW){
+    let s = new Soldier1("soldier");
+    soldierlst.push(s);
   }
 
-  drawSprites();
+}
 
+class Soldier1{
+  constructor(name){
+    this.x = 10;
+    this.y = 100;
+    this.name = createSprite(this.x,this.y);
+    this.name.addAnimation('normal', 'soldier2.png');
+  }
+  move(){
+    this.name.velocity.x = 0
+    if(platform.overlapPixel(this.name.position.x, this.name.position.y+25)==false){
+      this.name.velocity.y += GRAVITY;
+    }
+    while(platform.overlapPixel(this.name.position.x, this.name.position.y+25)){
+      this.name.position.y--;
+      this.name.velocity.y = 0;
+    }
+    if (keyIsDown(65)){
+      this.name.velocity.x = -5;
+    }
+    if (keyIsDown(68)){
+      this.name.velocity.x = 5;
+    }
+    drawSprites();
+  }
+}
 
-
+class Tank1{
+  constructor(name){
+    this.x = 10;
+    this.y = 100;
+    this.name = createSprite(this.x,this.y);
+    this.name.addAnimation('normal', 'tank.png');
+  }
+  move(){
+    this.name.velocity.x = 0
+    if(platform.overlapPixel(this.name.position.x, this.name.position.y+25)==false){
+      this.name.velocity.y += GRAVITY;
+    }
+    while(platform.overlapPixel(this.name.position.x, this.name.position.y+25)){
+      this.name.position.y--;
+      this.name.velocity.y = 0;
+    }
+    if (keyIsDown(65)){
+      this.name.velocity.x = -5;
+    }
+    if (keyIsDown(68)){
+      this.name.velocity.x = 5;
+    }
+    drawSprites();
+  }
 }
