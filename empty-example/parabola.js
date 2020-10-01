@@ -13,8 +13,8 @@ function setup() {
   platform.addAnimation('normal', 'mountains.png');
 
 
-  tank = new Tank1("first")
-  tank1 = new Tank("first")
+  let tank = new Tank1("first")
+  let tank1 = new Tank("here")
 }
 function draw() {
   background("yellow");
@@ -109,9 +109,9 @@ class Soldier1{
   }
 }
 
-class Tank2{
+class Tank{
   constructor(name){
-    this.x = 1000;
+    this.x = 40;
     this.y = 100;
     this.name = createSprite(this.x,this.y);
     this.name.addAnimation('normal', 'tank.png');
