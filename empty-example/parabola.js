@@ -8,33 +8,29 @@ let soldier1lst = [];
 function setup() {
   createCanvas(2000,800);
   background("yellow");
-
   platform = createSprite(1000,750);
   platform.addAnimation('normal', 'mountains.png');
-
-
-  tank = new Tank1("first")
-  tank1 = new Tank("here")
 }
 function draw() {
   background("yellow");
 
   for (let x=0; x<tank1lst.length; x++){
     tank1lst[x].move();
+    tank1lst[x].shoot()
   }
   for (let x=0; x<soldier1lst.length; x++){
     soldier1lst[x].move();
+    soldier1lst[x].shoot()
   }
   for (let x=0;x<tanklst.length;x++){
     tanklst[x].move()
+    tanklst[x].shoot()
   }
   for (let x=0;x<soldierlst.length;x++){
     soldierlst[x].move()
-    print("here")
+    soldierlst[x].shoot()
   }
-
-  tank.move()
-  tank1.move()
+  drawSprites()
 }
 
 function keyPressed() {
@@ -49,12 +45,10 @@ function keyPressed() {
   if (keyCode == 49){
     let s = new Soldier("soldier");
     soldierlst.push(s)
-    console.log("created")
   }
   if (keyCode == 50){
     let t = new Tank("tank");
     tanklst.push(t)
-    console.log("created")
   }
 
 
@@ -72,7 +66,7 @@ class Soldier{
       this.name.velocity.y += GRAVITY;
     }
     while(platform.overlapPixel(this.name.position.x, this.name.position.y+25)){
-      this.name.position.y--;
+      this.name.position.y = this.name.position.y - 2;
       this.name.velocity.y = 0;
     }
     if (keyIsDown(65)){
@@ -81,8 +75,31 @@ class Soldier{
     if (keyIsDown(68)){
       this.name.velocity.x = -5;
     }
-    drawSprites();
   }
+  shoot(){
+    let shoot = false;
+    for (let i=0;i<soldier1lst.length;i++){
+      if ((soldier1lst[i].name.position.y > this.name.position.y-60)&&(soldier1lst[i].name.position.y < this.name.position.y+60)){
+        if ((soldier1lst[i].name.position.x<this.name.position.x)&&(soldier1lst[i].name.position.x+700>this.name.position.x)){
+          shoot = true;
+          //console.log("here")
+        }
+      }
+    }
+    if (shoot == false){
+      for (let i=0;i<tank1lst.length;i++){
+        if ((tank1lst[i].name.position.y > this.name.position.y-75)&&(tank1lst[i].name.position.y < this.name.position.y+75)){
+          if ((tank1lst[i].name.position.x<this.name.position.x)&&(tank1lst[i].name.position.x+700>this.name.position.x)){
+            shoot = true;
+            //console.log("tank")
+          }
+        }
+      }
+    }
+  }
+
+
+
 }
 class Soldier1{
   constructor(name){
@@ -97,7 +114,7 @@ class Soldier1{
       this.name.velocity.y += GRAVITY;
     }
     while(platform.overlapPixel(this.name.position.x, this.name.position.y+25)){
-      this.name.position.y--;
+      this.name.position.y = this.name.position.y - 2;
       this.name.velocity.y = 0;
     }
     if (keyIsDown(65)){
@@ -106,7 +123,27 @@ class Soldier1{
     if (keyIsDown(68)){
       this.name.velocity.x = 5;
     }
-    drawSprites();
+  }
+  shoot(){
+    let shoot = false;
+    for (let i=0;i<soldierlst.length;i++){
+      if ((soldierlst[i].name.position.y > this.name.position.y-60)&&(soldierlst[i].name.position.y < this.name.position.y+60)){
+        if ((soldierlst[i].name.position.x>this.name.position.x)&&(soldierlst[i].name.position.x-700<this.name.position.x)){
+          shoot = true;
+          //console.log("here")
+        }
+      }
+    }
+    if (shoot == false){
+      for (let i=0;i<tanklst.length;i++){
+        if ((tanklst[i].name.position.y > this.name.position.y-75)&&(tanklst[i].name.position.y < this.name.position.y+75)){
+          if ((tanklst[i].name.position.x < this.name.position.x)&&(tanklst[i].name.position.x+700>this.name.position.x)){
+            shoot = true;
+            //console.log("tank")
+          }
+        }
+      }
+    }
   }
 }
 
@@ -123,7 +160,7 @@ class Tank{
       this.name.velocity.y += GRAVITY;
     }
     while(platform.overlapPixel(this.name.position.x, this.name.position.y+25)){
-      this.name.position.y--;
+      this.name.position.y = this.name.position.y - 2;
       this.name.velocity.y = 0;
     }
     if (keyIsDown(65)){
@@ -132,7 +169,27 @@ class Tank{
     if (keyIsDown(68)){
       this.name.velocity.x = -5;
     }
-    drawSprites();
+  }
+  shoot(){
+    let shoot = false;
+    for (let i=0;i<soldier1lst.length;i++){
+      if ((soldier1lst[i].name.position.y > this.name.position.y-60)&&(soldier1lst[i].name.position.y < this.name.position.y+60)){
+        if ((soldier1lst[i].name.position.x<this.name.position.x)&&(soldier1lst[i].name.position.x+700>this.name.position.x)){
+          shoot = true;
+          console.log("here")
+        }
+      }
+    }
+    if (shoot == false){
+      for (let i=0;i<tank1lst.length;i++){
+        if ((tank1lst[i].name.position.y > this.name.position.y-75)&&(tank1lst[i].name.position.y < this.name.position.y+75)){
+          if ((tank1lst[i].name.position.x<this.name.position.x)&&(tank1lst[i].name.position.x+700>this.name.position.x)){
+            shoot = true;
+            console.log("tank")
+          }
+        }
+      }
+    }
   }
 }
 
@@ -149,7 +206,7 @@ class Tank1{
       this.name.velocity.y += GRAVITY;
     }
     while(platform.overlapPixel(this.name.position.x, this.name.position.y+25)){
-      this.name.position.y--;
+      this.name.position.y = this.name.position.y - 2;
       this.name.velocity.y = 0;
     }
     if (keyIsDown(65)){
@@ -158,6 +215,26 @@ class Tank1{
     if (keyIsDown(68)){
       this.name.velocity.x = 5;
     }
-    drawSprites();
+  }
+  shoot(){
+    let shoot = false;
+    for (let i=0;i<soldierlst.length;i++){
+      if ((soldierlst[i].name.position.y > this.name.position.y-60)&&(soldierlst[i].name.position.y < this.name.position.y+60)){
+        if ((soldierlst[i].name.position.x>this.name.position.x)&&(soldierlst[i].name.position.x-700<this.name.position.x)){
+          shoot = true;
+          //console.log("here")
+        }
+      }
+    }
+    if (shoot == false){
+      for (let i=0;i<tanklst.length;i++){
+        if ((tanklst[i].name.position.y > this.name.position.y-75)&&(tanklst[i].name.position.y < this.name.position.y+75)){
+          if ((tanklst[i].name.position.x>this.name.position.x)&&(tanklst[i].name.position.x-700<this.name.position.x)){
+            shoot = true;
+            //console.log("tank")
+          }
+        }
+      }
+    }
   }
 }
