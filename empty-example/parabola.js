@@ -4,8 +4,11 @@ let tanklst = []
 let soldierlst = []
 let tank1lst = [];
 let soldier1lst = [];
-
+let bulletlst = [];
+let bullet1lst = [];
+let bulletCounter = 0;
 function setup() {
+  frameRate(40)
   createCanvas(2000,800);
   background("yellow");
   platform = createSprite(1000,750);
@@ -13,7 +16,16 @@ function setup() {
 }
 function draw() {
   background("yellow");
-
+  if (bullet1lst.length > 50){
+    bullet1lst = bullet1lst.splice(0,10);
+    print('clipped1')
+    print(bullet1lst.length)
+  }
+  if (bulletlst.length > 50){
+    bulletlst = bulletlst.splice(0,10);
+    print('clipped')
+    print(bulletlst.length)
+  }
   for (let x=0; x<tank1lst.length; x++){
     tank1lst[x].move();
     tank1lst[x].shoot()
@@ -29,6 +41,12 @@ function draw() {
   for (let x=0;x<soldierlst.length;x++){
     soldierlst[x].move()
     soldierlst[x].shoot()
+  }
+  for (let x=0;x<bulletlst.length;x++){
+    bulletlst[x].draw()
+  }
+  for (let x=0;x<bullet1lst.length;x++){
+    bullet1lst[x].draw()
   }
   drawSprites()
 }
@@ -59,6 +77,7 @@ class Soldier{
     this.y = 100;
     this.name = createSprite(this.x,this.y);
     this.name.addAnimation('normal', 'soldier.png');
+    this.health = 100;
   }
   move(){
     this.name.velocity.x = 0
@@ -96,6 +115,11 @@ class Soldier{
         }
       }
     }
+    if ((shoot == true)&&(0==frameCount%50)){
+      let b = new Bullet(this.name.position.x+65,this.name.position.y-12,-1,"bullet",bulletCounter);
+      bulletlst.push(b);
+      bulletCounter += 1;
+    }
   }
 
 
@@ -107,6 +131,7 @@ class Soldier1{
     this.y = 100;
     this.name = createSprite(this.x,this.y);
     this.name.addAnimation('normal', 'soldier2.png');
+    this.health = 100;
   }
   move(){
     this.name.velocity.x = 0
@@ -144,6 +169,11 @@ class Soldier1{
         }
       }
     }
+    if ((shoot == true)&&(0==frameCount%50)){
+      let b = new Bullet1(this.name.position.x+65,this.name.position.y-12,1,"bullet",bulletCounter);
+      bullet1lst.push(b);
+      bulletCounter += 1;
+    }
   }
 }
 
@@ -176,7 +206,6 @@ class Tank{
       if ((soldier1lst[i].name.position.y > this.name.position.y-60)&&(soldier1lst[i].name.position.y < this.name.position.y+60)){
         if ((soldier1lst[i].name.position.x<this.name.position.x)&&(soldier1lst[i].name.position.x+700>this.name.position.x)){
           shoot = true;
-          console.log("here")
         }
       }
     }
@@ -185,10 +214,14 @@ class Tank{
         if ((tank1lst[i].name.position.y > this.name.position.y-75)&&(tank1lst[i].name.position.y < this.name.position.y+75)){
           if ((tank1lst[i].name.position.x<this.name.position.x)&&(tank1lst[i].name.position.x+700>this.name.position.x)){
             shoot = true;
-            console.log("tank")
           }
         }
       }
+    }
+    if ((shoot == true)&&(0==frameCount%50)){
+      let b = new Bullet(this.name.position.x-65,this.name.position.y-12,-1,"bullet",bulletCounter);
+      bulletlst.push(b);
+      bulletCounter += 1;
     }
   }
 }
@@ -235,6 +268,47 @@ class Tank1{
           }
         }
       }
+    }
+    if ((shoot == true)&&(0==frameCount%50)){
+      let b = new Bullet1(this.name.position.x+65,this.name.position.y-12,1,"bullet",bulletCounter);
+      bullet1lst.push(b);
+      bulletCounter += 1;
+    }
+  }
+}
+class Bullet{
+  constructor(x,y,direction,name, number){
+    this.x = x;
+    this.y = y;
+    this.direction = direction;
+    this.name = createSprite(this.x,this.y,10,5);
+    this.name.velocity.y = 0;
+    this.name.life = 80;
+    this.number = number;
+  }
+  draw(){
+    this.name.velocity.x = 10 * this.direction;
+    this.name.velocity.y += 1/50*GRAVITY;
+    if (platform.overlapPixel(this.name.position.x, this.name.position.y-2.5)){
+      this.name.life = 0;
+    }
+  }
+}
+class Bullet1{
+  constructor(x,y,direction,name, number){
+    this.x = x;
+    this.y = y;
+    this.direction = direction;
+    this.name = createSprite(this.x,this.y,10,5);
+    this.name.velocity.y = 0;
+    this.name.life = 80;
+    this.number = number;
+  }
+  draw(){
+    this.name.velocity.x = 10 * this.direction;
+    this.name.velocity.y += 1/50*GRAVITY;
+    if (platform.overlapPixel(this.name.position.x, this.name.position.y-2.5)){
+      this.name.life = 0;
     }
   }
 }
