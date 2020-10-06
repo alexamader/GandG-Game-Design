@@ -16,12 +16,12 @@ function setup() {
 }
 function draw() {
   background("yellow");
-  if (bullet1lst.length > 50){
+  if (bullet1lst.length > 25){
     bullet1lst = bullet1lst.splice(0,10);
     print('clipped1')
     print(bullet1lst.length)
   }
-  if (bulletlst.length > 50){
+  if (bulletlst.length > 25){
     bulletlst = bulletlst.splice(0,10);
     print('clipped')
     print(bulletlst.length)
@@ -29,18 +29,66 @@ function draw() {
   for (let x=0; x<tank1lst.length; x++){
     tank1lst[x].move();
     tank1lst[x].shoot()
+    for (let i=0;i<bulletlst.length;i++){
+        if (tank1lst[x].name.overlapPixel(bulletlst[i].name.position.x,bulletlst[i].name.position.y)==true){
+          tank1lst[x].health = tank1lst[x].health-10;
+          bulletlst[i].name.remove(bulletlst[i].name);
+          bulletlst.splice(i,1);
+          print(tank1lst[x].health);
+          if (tank1lst[x].health == 0){
+            tank1lst[x].name.remove(tank1lst[x].name);
+            tank1lst.splice(x,1);
+          }
+        }
+    }
   }
   for (let x=0; x<soldier1lst.length; x++){
     soldier1lst[x].move();
     soldier1lst[x].shoot()
+    for (let i=0;i<bulletlst.length;i++){
+        if (soldier1lst[x].name.overlapPixel(bulletlst[i].name.position.x,bulletlst[i].name.position.y)==true){
+          soldier1lst[x].health = soldier1lst[x].health-10;
+          bulletlst[i].name.remove(bulletlst[i].name);
+          bulletlst.splice(i,1);
+          print(soldier1lst[x].health);
+          if (soldier1lst[x].health == 0){
+            soldier1lst[x].name.remove(soldier1lst[x].name);
+            soldier1lst[x].splice(x,1);
+          }
+        }
+    }
   }
   for (let x=0;x<tanklst.length;x++){
     tanklst[x].move()
     tanklst[x].shoot()
+    for (let i=0;i<bullet1lst.length;i++){
+        if (tanklst[x].name.overlapPixel(bullet1lst[i].name.position.x,bullet1lst[i].name.position.y)==true){
+          tanklst[x].health = tanklst[x].health-10;
+          bullet1lst[i].name.remove(bullet1lst[i].name);
+          bullet1lst.splice(i,1);
+          print(tanklst[x].health);
+          if (tanklst[x].health == 0){
+            tanklst[x].name.remove(tanklst[x].name);
+            tanklst.splice(x,1);
+          }
+        }
+    }
   }
   for (let x=0;x<soldierlst.length;x++){
     soldierlst[x].move()
     soldierlst[x].shoot()
+    for (let i=0;i<bullet1lst.length;i++){
+        if (soldierlst[x].name.overlapPixel(bullet1lst[i].name.position.x,bullet1lst[i].name.position.y)==true){
+          soldierlst[x].health = soldierlst[x].health-10;
+          bullet1lst[i].name.remove(bullet1lst[i].name)
+          bullet1lst.splice(i,1)
+          print(soldierlst[x].health)
+          if (soldierlst[x].health == 0){
+            soldierlst[x].name.remove(soldierlst[x].name)
+            soldierlst.splice(x,1)
+          }
+        }
+    }
   }
   for (let x=0;x<bulletlst.length;x++){
     bulletlst[x].draw()
@@ -48,6 +96,8 @@ function draw() {
   for (let x=0;x<bullet1lst.length;x++){
     bullet1lst[x].draw()
   }
+
+
   drawSprites()
 }
 
@@ -121,9 +171,6 @@ class Soldier{
       bulletCounter += 1;
     }
   }
-
-
-
 }
 class Soldier1{
   constructor(name){
@@ -155,7 +202,6 @@ class Soldier1{
       if ((soldierlst[i].name.position.y > this.name.position.y-60)&&(soldierlst[i].name.position.y < this.name.position.y+60)){
         if ((soldierlst[i].name.position.x>this.name.position.x)&&(soldierlst[i].name.position.x-700<this.name.position.x)){
           shoot = true;
-          //console.log("here")
         }
       }
     }
@@ -164,7 +210,6 @@ class Soldier1{
         if ((tanklst[i].name.position.y > this.name.position.y-75)&&(tanklst[i].name.position.y < this.name.position.y+75)){
           if ((tanklst[i].name.position.x < this.name.position.x)&&(tanklst[i].name.position.x+700>this.name.position.x)){
             shoot = true;
-            //console.log("tank")
           }
         }
       }
@@ -183,6 +228,7 @@ class Tank{
     this.y = 100;
     this.name = createSprite(this.x,this.y);
     this.name.addAnimation('normal', 'tank.png');
+    this.health = 200;
   }
   move(){
     this.name.velocity.x = 0
@@ -232,6 +278,7 @@ class Tank1{
     this.y = 100;
     this.name = createSprite(this.x,this.y);
     this.name.addAnimation('normal', 'tank2.png');
+    this.health = 200;
   }
   move(){
     this.name.velocity.x = 0
