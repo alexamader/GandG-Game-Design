@@ -7,24 +7,56 @@ let soldier1lst = [];
 let bulletlst = [];
 let bullet1lst = [];
 let bulletCounter = 0;
+let fortress;
+let fortress1;
+let soldierinput;
+let soldier1input;
+let instruction;
+let instruction1;
+let button;
+let unitCount = 4;
+
 function setup() {
   frameRate(40)
-  createCanvas(2000,800);
+  createCanvas(3000,800);
   background("yellow");
-  platform = createSprite(1000,750);
-  platform.addAnimation('normal', 'mountains.png');
+  platform = createSprite(1500,800);
+  platform.addAnimation('normal', 'base.png');
+  fortress = new Fortress("fortress");
+  fortress1 = new Fortress1("fortress1");
+  instruction = createElement("h2", "#soldiers:")
+  instruction.position(2500,200);
+  instruction1 = createElement("h2", "# soldiers:")
+  instruction1.position(500,200);
+  soldierinput = createInput();
+  soldierinput.position(2500,250);
+  soldier1input = createInput();
+  soldier1input.position(500,250);
+  button = createButton("submit");
+  button.position(1500,250);
+  button.mousePressed(start)
+}
+function start(){
+  print("triggered")
+  const numsoldier  = parseInt(soldierinput.value());
+  const numsoldier1 = soldier1input.value()
+  for (let i=0; i<numsoldier; i++){
+    print("here")
+    let s = new Soldier("soldier");
+    soldierlst.push(s);
+  }
 }
 function draw() {
   background("yellow");
   if (bullet1lst.length > 25){
     bullet1lst = bullet1lst.splice(0,10);
-    print('clipped1')
-    print(bullet1lst.length)
+    print('clipped1');
+    print(bullet1lst.length);
   }
   if (bulletlst.length > 25){
     bulletlst = bulletlst.splice(0,10);
-    print('clipped')
-    print(bulletlst.length)
+    print('clipped');
+    print(bulletlst.length);
   }
   for (let x=0; x<tank1lst.length; x++){
     tank1lst[x].move();
@@ -42,18 +74,21 @@ function draw() {
         }
     }
   }
-  for (let x=0; x<soldier1lst.length; x++){
-    soldier1lst[x].move();
+  for (let x=0;x<soldier1lst.length;x++){
+    soldier1lst[x].move()
     soldier1lst[x].shoot()
     for (let i=0;i<bulletlst.length;i++){
         if (soldier1lst[x].name.overlapPixel(bulletlst[i].name.position.x,bulletlst[i].name.position.y)==true){
+          print("hit");
           soldier1lst[x].health = soldier1lst[x].health-10;
-          bulletlst[i].name.remove(bulletlst[i].name);
-          bulletlst.splice(i,1);
-          print(soldier1lst[x].health);
+          bulletlst[i].name.remove(bulletlst[i].name)
+          bulletlst.splice(i,1)
+          print(soldier1lst[x].health)
           if (soldier1lst[x].health == 0){
-            soldier1lst[x].name.remove(soldier1lst[x].name);
-            soldier1lst[x].splice(x,1);
+            print(soldier1lst);
+            soldier1lst[x].name.remove(soldier1lst[x].name)
+            soldier1lst.splice(x,1)
+            print(soldier1lst)
           }
         }
     }
@@ -92,35 +127,47 @@ function draw() {
   }
   for (let x=0;x<bulletlst.length;x++){
     bulletlst[x].draw()
+    if (bulletlst[x].name.position.x <= 290){
+      fortress.hit()
+      bulletlst[x].name.life=0;
+      bulletlst[x].name.remove(bulletlst[x].name);
+      bulletlst.splice(x,1)
+    }
   }
   for (let x=0;x<bullet1lst.length;x++){
     bullet1lst[x].draw()
+    if (bullet1lst[x].name.position.x >= 2710){
+      fortress1.hit()
+      bullet1lst[x].name.life=0;
+      bullet1lst[x].name.remove(bullet1lst[x].name);
+      bullet1lst.splice(x,1)
+    }
   }
 
 
   drawSprites()
 }
 
-function keyPressed() {
-  if (keyCode == UP_ARROW){
-    let t1 = new Tank1("tank");
-    tank1lst.push(t1);
-  }
-  if (keyCode == DOWN_ARROW){
-    let s1 = new Soldier1("soldier");
-    soldier1lst.push(s1);
-  }
-  if (keyCode == 49){
-    let s = new Soldier("soldier");
-    soldierlst.push(s)
-  }
-  if (keyCode == 50){
-    let t = new Tank("tank");
-    tanklst.push(t)
-  }
-
-
-}
+// function keyPressed() {
+//   if (keyCode == 52){
+//     let t1 = new Tank1("tank");
+//     tank1lst.push(t1);
+//   }
+//   if (keyCode == 51){
+//     let s1 = new Soldier1("soldier");
+//     soldier1lst.push(s1);
+//   }
+//   if (keyCode == 49){
+//     let s = new Soldier("soldier");
+//     soldierlst.push(s)
+//   }
+//   if (keyCode == 50){
+//     let t = new Tank("tank");
+//     tanklst.push(t)
+//   }
+//
+//
+// }
 class Soldier{
   constructor(name){
     this.x = 1000;
@@ -135,14 +182,8 @@ class Soldier{
       this.name.velocity.y += GRAVITY;
     }
     while(platform.overlapPixel(this.name.position.x, this.name.position.y+25)){
-      this.name.position.y = this.name.position.y - 2;
+      this.name.position.y = this.name.position.y - 0.1;
       this.name.velocity.y = 0;
-    }
-    if (keyIsDown(65)){
-      this.name.velocity.x = 5;
-    }
-    if (keyIsDown(68)){
-      this.name.velocity.x = -5;
     }
   }
   shoot(){
@@ -165,10 +206,15 @@ class Soldier{
         }
       }
     }
+    if (this.name.position.x <= 500){
+      shoot = true;
+    }
     if ((shoot == true)&&(0==frameCount%50)){
-      let b = new Bullet(this.name.position.x+65,this.name.position.y-12,-1,"bullet",bulletCounter);
+      let b = new Bullet(this.name.position.x-20,this.name.position.y-6,-1,"bullet",bulletCounter);
       bulletlst.push(b);
       bulletCounter += 1;
+    } else if (shoot == false){
+      this.name.velocity.x = -2;
     }
   }
 }
@@ -186,7 +232,7 @@ class Soldier1{
       this.name.velocity.y += GRAVITY;
     }
     while(platform.overlapPixel(this.name.position.x, this.name.position.y+25)){
-      this.name.position.y = this.name.position.y - 2;
+      this.name.position.y = this.name.position.y - 0.1;
       this.name.velocity.y = 0;
     }
     if (keyIsDown(65)){
@@ -208,16 +254,22 @@ class Soldier1{
     if (shoot == false){
       for (let i=0;i<tanklst.length;i++){
         if ((tanklst[i].name.position.y > this.name.position.y-75)&&(tanklst[i].name.position.y < this.name.position.y+75)){
-          if ((tanklst[i].name.position.x < this.name.position.x)&&(tanklst[i].name.position.x+700>this.name.position.x)){
+          if ((tanklst[i].name.position.x>this.name.position.x)&&(tanklst[i].name.position.x-700<this.name.position.x)){
             shoot = true;
+            //console.log("tank")
           }
         }
       }
+    }
+    if (this.name.position.x >= 2500){
+      shoot = true;
     }
     if ((shoot == true)&&(0==frameCount%50)){
       let b = new Bullet1(this.name.position.x+65,this.name.position.y-12,1,"bullet",bulletCounter);
       bullet1lst.push(b);
       bulletCounter += 1;
+    } else if (shoot == false){
+      this.name.velocity.x = 2;
     }
   }
 }
@@ -236,7 +288,7 @@ class Tank{
       this.name.velocity.y += GRAVITY;
     }
     while(platform.overlapPixel(this.name.position.x, this.name.position.y+25)){
-      this.name.position.y = this.name.position.y - 2;
+      this.name.position.y = this.name.position.y - 0.1;
       this.name.velocity.y = 0;
     }
     if (keyIsDown(65)){
@@ -264,10 +316,15 @@ class Tank{
         }
       }
     }
+    if (this.name.position.x <= 500){
+      shoot = true;
+    }
     if ((shoot == true)&&(0==frameCount%50)){
-      let b = new Bullet(this.name.position.x-65,this.name.position.y-12,-1,"bullet",bulletCounter);
+      let b = new Bullet(this.name.position.x-65,this.name.position.y-8,-1,"bullet",bulletCounter);
       bulletlst.push(b);
       bulletCounter += 1;
+    } else if (shoot == false){
+      this.name.velocity.x = -3;
     }
   }
 }
@@ -286,7 +343,7 @@ class Tank1{
       this.name.velocity.y += GRAVITY;
     }
     while(platform.overlapPixel(this.name.position.x, this.name.position.y+25)){
-      this.name.position.y = this.name.position.y - 2;
+      this.name.position.y = this.name.position.y - 0.1;
       this.name.velocity.y = 0;
     }
     if (keyIsDown(65)){
@@ -316,10 +373,15 @@ class Tank1{
         }
       }
     }
+    if (this.name.position.x >= 2500){
+      shoot = true;
+    }
     if ((shoot == true)&&(0==frameCount%50)){
-      let b = new Bullet1(this.name.position.x+65,this.name.position.y-12,1,"bullet",bulletCounter);
+      let b = new Bullet1(this.name.position.x+65,this.name.position.y-8,1,"bullet",bulletCounter);
       bullet1lst.push(b);
       bulletCounter += 1;
+    } else if (shoot == false){
+      this.name.velocity.x = 3;
     }
   }
 }
@@ -330,12 +392,12 @@ class Bullet{
     this.direction = direction;
     this.name = createSprite(this.x,this.y,10,5);
     this.name.velocity.y = 0;
-    this.name.life = 80;
+    this.name.life = 150;
     this.number = number;
   }
   draw(){
-    this.name.velocity.x = 10 * this.direction;
-    this.name.velocity.y += 1/50*GRAVITY;
+    this.name.velocity.x = 20 * this.direction;
+    this.name.velocity.y += 1/100*GRAVITY;
     if (platform.overlapPixel(this.name.position.x, this.name.position.y-2.5)){
       this.name.life = 0;
     }
@@ -348,14 +410,42 @@ class Bullet1{
     this.direction = direction;
     this.name = createSprite(this.x,this.y,10,5);
     this.name.velocity.y = 0;
-    this.name.life = 80;
+    this.name.life = 150;
     this.number = number;
   }
   draw(){
-    this.name.velocity.x = 10 * this.direction;
+    this.name.velocity.x = 20 * this.direction;
     this.name.velocity.y += 1/50*GRAVITY;
     if (platform.overlapPixel(this.name.position.x, this.name.position.y-2.5)){
       this.name.life = 0;
+    }
+  }
+}
+class Fortress{
+  constructor(name){
+    this.name = createSprite(2855,635);
+    this.name.addAnimation("noraml","castle.png");
+    this.health = 1000;
+  }
+  hit(){
+    this.health -= 100;
+
+    if (this.health <= 0){
+      print("dead");
+    }
+  }
+}
+class Fortress1{
+  constructor(name){
+    this.name = createSprite(145,635);
+    this.name.addAnimation("normal","castle1.png");
+    this.health = 1000;
+  }
+  hit(){
+    this.health -= 100;
+
+    if (this.health <= 0){
+      print("dead");
     }
   }
 }
