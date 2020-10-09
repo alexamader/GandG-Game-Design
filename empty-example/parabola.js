@@ -36,6 +36,15 @@ function setup() {
   button.position(1500,250);
   button.mousePressed(start)
 }
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
+}
+
+
 function start(){
   print("triggered")
   const numsoldier  = parseInt(soldierinput.value());
@@ -170,8 +179,8 @@ function draw() {
 // }
 class Soldier{
   constructor(name){
-    this.x = 1000;
-    this.y = 100;
+    this.x = random(1000,1100);
+    this.y = random(100,120);
     this.name = createSprite(this.x,this.y);
     this.name.addAnimation('normal', 'soldier.png');
     this.health = 100;
