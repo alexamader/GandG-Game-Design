@@ -11,27 +11,38 @@ let fortress;
 let fortress1;
 let soldierinput;
 let soldier1input;
+let tankinput
+let tankinput1;
 let instruction;
 let instruction1;
 let button;
-let unitCount = 4;
+let unitCount1 = 0;
+let unitCount = 0;
+let totalsoldiercount = 0;
+let totalsoldier1count = 0;
+let totaltankcount = 0;
+let totaltank1count = 0 ;
 
 function setup() {
   frameRate(40)
   createCanvas(3000,800);
   background("yellow");
-  platform = createSprite(1500,800);
+  platform = createSprite(1500,792);
   platform.addAnimation('normal', 'base.png');
   fortress = new Fortress("fortress");
   fortress1 = new Fortress1("fortress1");
-  instruction = createElement("h2", "#soldiers:")
+  instruction = createElement("h2", "#soldiers=1,tanks=2,8max")
   instruction.position(2500,200);
-  instruction1 = createElement("h2", "# soldiers:")
+  instruction1 = createElement("h2", "#soldiers=1,tanks=2,8max")
   instruction1.position(500,200);
   soldierinput = createInput();
   soldierinput.position(2500,250);
+  tankinput = createInput();
+  tankinput.position(2500,270);
   soldier1input = createInput();
   soldier1input.position(500,250);
+  tankinput1 = createInput();
+  tankinput1.position(500,270);
   button = createButton("submit");
   button.position(1500,250);
   button.mousePressed(start)
@@ -46,13 +57,52 @@ function sleep(milliseconds) {
 
 
 function start(){
-  print("triggered")
-  const numsoldier  = parseInt(soldierinput.value());
-  const numsoldier1 = soldier1input.value()
-  for (let i=0; i<numsoldier; i++){
-    print("here")
-    let s = new Soldier("soldier");
-    soldierlst.push(s);
+  const numsoldier = 0 + parseInt(soldierinput.value());
+  const numsoldier1 = 0 + parseInt(soldier1input.value());
+  const numtank = 0 + parseInt(tankinput.value());
+  const numtank1 = 0 + parseInt(tankinput1.value());
+
+
+
+  totalsoldiercount += numsoldier;
+  totaltankcount += numtank;
+  totalsoldier1count += numsoldier1;
+  totaltank1count += numtank1;
+
+
+
+  unitCount = (totalsoldiercount + 2*totaltankcount);
+  unitCount1 = (totalsoldier1count + 2*totaltank1count);
+
+  print(unitCount);
+
+  if (unitCount > 8){
+    instruction.html("too_many.")
+  } else {
+    for (let i=0; i<numsoldier; i++){
+      let s = new Soldier("soldier");
+      soldierlst.push(s);
+
+    }
+    for (let i=0;i<numtank;i++){
+      let t = new Tank("tank");
+      tanklst.push(t);
+      print("tank")
+    }
+  }
+  if (unitCount1 > 8){
+    instruction1.html("too_many.")
+  } else {
+    for (let i=0; i<numsoldier1; i++){
+      let s = new Soldier1("soldier1");
+      soldier1lst.push(s);
+
+    }
+    for (let i=0;i<numtank1;i++){
+      let t = new Tank1("tank1");
+      tank1lst.push(t);
+      print("tank")
+    }
   }
 }
 function draw() {
@@ -79,6 +129,7 @@ function draw() {
           if (tank1lst[x].health == 0){
             tank1lst[x].name.remove(tank1lst[x].name);
             tank1lst.splice(x,1);
+            break;
           }
         }
     }
@@ -98,6 +149,7 @@ function draw() {
             soldier1lst[x].name.remove(soldier1lst[x].name)
             soldier1lst.splice(x,1)
             print(soldier1lst)
+            break;
           }
         }
     }
@@ -114,6 +166,7 @@ function draw() {
           if (tanklst[x].health == 0){
             tanklst[x].name.remove(tanklst[x].name);
             tanklst.splice(x,1);
+            break;
           }
         }
     }
@@ -129,7 +182,8 @@ function draw() {
           print(soldierlst[x].health)
           if (soldierlst[x].health == 0){
             soldierlst[x].name.remove(soldierlst[x].name)
-            soldierlst.splice(x,1)
+            soldierlst.splice(x,1);
+            break;
           }
         }
     }
@@ -157,41 +211,21 @@ function draw() {
   drawSprites()
 }
 
-// function keyPressed() {
-//   if (keyCode == 52){
-//     let t1 = new Tank1("tank");
-//     tank1lst.push(t1);
-//   }
-//   if (keyCode == 51){
-//     let s1 = new Soldier1("soldier");
-//     soldier1lst.push(s1);
-//   }
-//   if (keyCode == 49){
-//     let s = new Soldier("soldier");
-//     soldierlst.push(s)
-//   }
-//   if (keyCode == 50){
-//     let t = new Tank("tank");
-//     tanklst.push(t)
-//   }
-//
-//
-// }
 class Soldier{
   constructor(name){
-    this.x = random(1000,1100);
-    this.y = random(100,120);
+    this.x = random(2900,3000);
+    this.y = 100
     this.name = createSprite(this.x,this.y);
     this.name.addAnimation('normal', 'soldier.png');
     this.health = 100;
   }
   move(){
     this.name.velocity.x = 0
-    if(platform.overlapPixel(this.name.position.x, this.name.position.y+25)==false){
+    if(this.name.position.y < 695){
       this.name.velocity.y += GRAVITY;
     }
-    while(platform.overlapPixel(this.name.position.x, this.name.position.y+25)){
-      this.name.position.y = this.name.position.y - 0.1;
+    if(this.name.position.y >= 695){
+      //this.name.position.y = this.name.position.y - 0.1;
       this.name.velocity.y = 0;
     }
   }
@@ -229,7 +263,7 @@ class Soldier{
 }
 class Soldier1{
   constructor(name){
-    this.x = 10;
+    this.x = random(0,100);
     this.y = 100;
     this.name = createSprite(this.x,this.y);
     this.name.addAnimation('normal', 'soldier2.png');
@@ -237,11 +271,11 @@ class Soldier1{
   }
   move(){
     this.name.velocity.x = 0
-    if(platform.overlapPixel(this.name.position.x, this.name.position.y+25)==false){
+    if(this.name.position.y < 695){
       this.name.velocity.y += GRAVITY;
     }
-    while(platform.overlapPixel(this.name.position.x, this.name.position.y+25)){
-      this.name.position.y = this.name.position.y - 0.1;
+    if(this.name.position.y >= 695){
+      //this.name.position.y = this.name.position.y - 0.1;
       this.name.velocity.y = 0;
     }
     if (keyIsDown(65)){
@@ -285,7 +319,7 @@ class Soldier1{
 
 class Tank{
   constructor(name){
-    this.x = 1000;
+    this.x = random(2900,3000);
     this.y = 100;
     this.name = createSprite(this.x,this.y);
     this.name.addAnimation('normal', 'tank.png');
@@ -293,11 +327,11 @@ class Tank{
   }
   move(){
     this.name.velocity.x = 0
-    if(platform.overlapPixel(this.name.position.x, this.name.position.y+25)==false){
+    if(this.name.position.y < 695){
       this.name.velocity.y += GRAVITY;
     }
-    while(platform.overlapPixel(this.name.position.x, this.name.position.y+25)){
-      this.name.position.y = this.name.position.y - 0.1;
+    if(this.name.position.y >= 695){
+      //this.name.position.y = this.name.position.y - 0.1;
       this.name.velocity.y = 0;
     }
     if (keyIsDown(65)){
@@ -340,7 +374,7 @@ class Tank{
 
 class Tank1{
   constructor(name){
-    this.x = 176;
+    this.x = random(0,100);
     this.y = 100;
     this.name = createSprite(this.x,this.y);
     this.name.addAnimation('normal', 'tank2.png');
@@ -348,11 +382,11 @@ class Tank1{
   }
   move(){
     this.name.velocity.x = 0
-    if(platform.overlapPixel(this.name.position.x, this.name.position.y+25)==false){
+    if(this.name.position.y < 695){
       this.name.velocity.y += GRAVITY;
     }
-    while(platform.overlapPixel(this.name.position.x, this.name.position.y+25)){
-      this.name.position.y = this.name.position.y - 0.1;
+    if(this.name.position.y >= 695){
+      //this.name.position.y = this.name.position.y - 0.1;
       this.name.velocity.y = 0;
     }
     if (keyIsDown(65)){
@@ -432,7 +466,7 @@ class Bullet1{
 }
 class Fortress{
   constructor(name){
-    this.name = createSprite(2855,635);
+    this.name = createSprite(2855,630);
     this.name.addAnimation("noraml","castle.png");
     this.health = 1000;
   }
@@ -446,7 +480,7 @@ class Fortress{
 }
 class Fortress1{
   constructor(name){
-    this.name = createSprite(145,635);
+    this.name = createSprite(145,630);
     this.name.addAnimation("normal","castle1.png");
     this.health = 1000;
   }
